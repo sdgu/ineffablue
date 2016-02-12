@@ -27,6 +27,41 @@ var T = new Twit(
   timeout_ms: 60*1000,
 })
 
+var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
+stream.on("tweet", function(tweet)
+{
+
+
+	Poet.find(
+	{
+		id: tweet.user.id
+	}, function(err, docs)
+	{
+		console.log(docs);
+		if (err) throw err;
+		if (docs.length > 0)
+		{
+			console.log("user already exists");
+
+		}
+		else
+		{
+			var newPoet = new Poet(
+			{
+				name: tweet.user.name,
+				id: tweet.user.id,
+				id_str: tweet.user.id_str,
+				screen_name: tweet.user.screen_name
+			});
+			newPoet.save(function(err)
+			{
+				if (err) throw err;
+				console.log("got a new user");
+			})
+		}
+	});
+
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) 
