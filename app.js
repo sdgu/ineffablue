@@ -5,13 +5,31 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
+var mongoose = require("mongoose");
+require("./env.js")
+var dbuser = process.env.USER;
+var dbpass = process.env.PASS;
+
+var dburi = "mongodb://" + dbuser + ":" + dbpass + "@ds061365.mongolab.com:61365/ineffablue";
+var connextion = mongoose.connect(dburi);
+var db = connextion.connection;
+
+require("./models/poets");
+
+
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
 
+
+
+
+
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'public/views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
