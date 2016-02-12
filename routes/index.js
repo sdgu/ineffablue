@@ -36,7 +36,7 @@ router.get('/', function(req, res, next)
 
 router.get("/test", function(req, res, next)
 {
-	var testPoet = new Poet({name: "Pasta man"});
+	var testPoet = new Poet({name: "dong2"});
 
 	testPoet.save(function(err)
 	{

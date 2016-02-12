@@ -27,9 +27,10 @@ app.controller("MainCtrl", function($scope)
 
 
 
-app.controller("PoetCtrl", function($scope)
+app.controller("PoetCtrl", function($scope, poets, post)
 {
-	$scope.name = "shawn";
+	$scope.name = post;
+	
 })
 
 
@@ -64,7 +65,7 @@ app.config(function($stateProvider, $urlRouterProvider)
 		{
 			post: ["$stateParams", "poets", function($stateParams, poets)
 			{
-				alert($stateParams.name);
+				//alert($stateParams.name);
 				return poets.get($stateParams.name);
 			}]
 		}
