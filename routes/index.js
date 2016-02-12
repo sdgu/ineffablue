@@ -18,10 +18,14 @@ var Twit = require("twit");
 // });
 
 
-// var T = new Twit(
-// {
-
-// })
+var T = new Twit(
+{
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  access_token: process.env.ACCESS_TOKEN,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+  timeout_ms: 60*1000,
+})
 
 
 /* GET home page. */
@@ -41,6 +45,37 @@ router.get("/test", function(req, res, next)
 	});
 });
 
+router.get("/poets", function(req, res, next)
+{
+	Poet.find(function(err, docs)
+	{
+		if (err) throw err;
+		console.log(docs);
+		res.send(docs);
+	})
+})
+
+
+router.param("name", function(req, res, next, pname)
+{
+	var query = Poet.findOne({"name" : pname});
+
+	query.exec(function(err, name)
+	{
+		if (err) return next(err);
+		if (!name) return next(new Error("rip"));
+
+		req.name = pname;
+		return next();
+	});
+})
+
+
+router.get("/poets/:name", function(req, res)
+{
+	console.log(req.name);
+	res.json(req.name);
+})
 
 
 module.exports = router;
