@@ -30,18 +30,30 @@ var T = new Twit(
 var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
 stream.on("tweet", function(tweet)
 {
-
+	//console.log(tweet);
 
 	Poet.find(
 	{
-		id: tweet.user.id
+		id_str: tweet.user.id_str
 	}, function(err, docs)
 	{
-		console.log(docs);
+		//console.log(docs);
 		if (err) throw err;
 		if (docs.length > 0)
 		{
 			console.log("user already exists");
+			//do things like adding the tweet content to "lines"
+			Poet.findOneAndUpdate(
+			{
+				id_str: tweet.user.id_str
+			},
+			{
+				$push: {lines: tweet.id_str}
+			}, function(err, docs)
+			{
+				if (err) throw err;
+				else console.log(docs);
+			})
 
 		}
 		else
@@ -51,7 +63,8 @@ stream.on("tweet", function(tweet)
 				name: tweet.user.name,
 				id: tweet.user.id,
 				id_str: tweet.user.id_str,
-				screen_name: tweet.user.screen_name
+				screen_name: tweet.user.screen_name,
+				lines: tweet.id_str
 			});
 			newPoet.save(function(err)
 			{
@@ -62,6 +75,12 @@ stream.on("tweet", function(tweet)
 	});
 
 });
+
+
+//populate: .populate('_creator')
+
+
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) 
@@ -80,7 +99,7 @@ router.get("/test", function(req, res, next)
 	});
 });
 
-router.get("/poets", function(req, res, next)
+router.get("/restful/poets", function(req, res, next)
 {
 	Poet.find(function(err, docs)
 	{
@@ -106,7 +125,7 @@ router.param("name", function(req, res, next, pname)
 })
 
 
-router.get("/poets/:name", function(req, res)
+router.get("/restful/poets/:name", function(req, res)
 {
 	console.log(req.name);
 	res.json(req.name);

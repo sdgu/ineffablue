@@ -6,7 +6,7 @@ var PoetSchema = new mongoose.Schema(
 	id_str: String,
 	name: String,
 	screen_name: String,
-	lines: [{type: mongoose.Schema.Types.ObjectId, ref: "Line"}]
+	lines: [{type: mongoose.Schema.Types.String, ref: "Line"}]
 });
 
 mongoose.model("Poet", PoetSchema);

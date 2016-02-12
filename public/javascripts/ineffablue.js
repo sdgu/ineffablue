@@ -10,7 +10,7 @@ app.factory("poets", function($http, $window)
 
 	o.get = function(name)
 	{
-		return $http.get("/poets/" + name).then(function(res)
+		return $http.get("/restful/poets/" + name).then(function(res)
 		{
 			return res.data;
 		})
@@ -38,7 +38,7 @@ app.controller("PoetCtrl", function($scope, poets, post)
 
 
 
-app.config(function($stateProvider, $urlRouterProvider)
+app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 {
 	$urlRouterProvider.otherwise("/");
 
@@ -70,5 +70,7 @@ app.config(function($stateProvider, $urlRouterProvider)
 			}]
 		}
 	})
+
+	// $locationProvider.html5Mode(true);
 
 });
