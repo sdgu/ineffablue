@@ -29,7 +29,7 @@ app.controller("MainCtrl", function($scope)
 
 app.controller("PoetCtrl", function($scope, poets, post)
 {
-	$scope.name = post;
+	$scope.screen_name = post.screen_name;
 	
 })
 

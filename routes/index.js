@@ -74,6 +74,8 @@ stream.on("tweet", function(tweet)
 		}
 	});
 
+	console.log("poet done finding does that work?");
+
 });
 
 
@@ -110,25 +112,28 @@ router.get("/restful/poets", function(req, res, next)
 })
 
 
-router.param("name", function(req, res, next, pname)
+router.param("screenname", function(req, res, next, sname)
 {
-	var query = Poet.findOne({"name" : pname});
+	var query = Poet.findOne({"screen_name" : sname});
 
-	query.exec(function(err, name)
+	query.select("name id_str screen_name lines");
+
+	query.exec(function(err, poet)
 	{
 		if (err) return next(err);
-		if (!name) return next(new Error("rip"));
-
-		req.name = pname;
+		if (!poet) return next(new Error("rip"));
+		console.log(poet);
+		//req.name = pname;
+		req.poet = poet;
 		return next();
 	});
 })
 
 
-router.get("/restful/poets/:name", function(req, res)
+router.get("/restful/poets/:screenname", function(req, res)
 {
-	console.log(req.name);
-	res.json(req.name);
+	console.log(req.poet);
+	res.json(req.poet);
 })
 
 

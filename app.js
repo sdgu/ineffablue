@@ -16,6 +16,7 @@ var connextion = mongoose.connect(dburi);
 var db = connextion.connection;
 
 require("./models/poets");
+require("./models/firstlines");
 
 
 
