@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 
 var Poet = mongoose.model("Poet");
 var FirstLine = mongoose.model("FirstLine");
-
+var Line = mongoose.model("Line");
 var Twit = require("twit");
 
 
@@ -43,7 +43,7 @@ stream.on("tweet", function(tweet)
 		if (err) throw err;
 		if (docs.length > 0)
 		{
-			console.log("user already exists");
+			console.log("user exists");
 			//do things like adding the tweet content to "lines"
 			Poet.findOneAndUpdate(
 			{
@@ -54,23 +54,58 @@ stream.on("tweet", function(tweet)
 			}, function(err, docs)
 			{
 				if (err) throw err;
-				
-				var newFirstLine = new FirstLine(
+				FirstLine.find(function(err, docs)
 				{
-					_id: tweet.id_str,
-					text: tweet.text,
-					poet: tweet.user.screen_name,
-					maxLength: 10
+					FirstLine.findOneAndUpdate(
+					{
+						_id: docs[3]._id
+					},
+					{
+						$push: {lines: tweet.id_str}
+					}, function(err, docs)
+					{
+						if (err) throw err;
+						console.log(docs);
+
+						var newLine = new Line(
+						{
+							_id: tweet.id_str,
+							text: tweet.text,
+							poet: tweet.user.screen_name,
+							opening: tweet.id_str
+						})
+						newLine.save(function(err)
+						{
+							if (err) throw err;
+						})
+					})
 				})
-				newFirstLine.save(function(err)
-				{
-					if (err) throw err;
-					console.log("added a new first line");
-				})
+				// var newFirstLine = new FirstLine(
+				// {
+				// 	_id: tweet.id_str,
+				// 	text: tweet.text,
+				// 	poet: tweet.user.screen_name,
+				// 	maxLength: 10
+				// })
+				// newFirstLine.save(function(err)
+				// {
+				// 	if (err) throw err;
+				// 	console.log("added a new first line");
 
+				// 	var newLine = new Line(
+				// 	{
+				// 		_id: tweet.id_str,
+				// 		text: tweet.text,
+				// 		poet: tweet.user.screen_name,
+				// 		opening: tweet.id_str
+				// 	})
 
+				// 	newLine.save(function(err)
+				// 	{
+				// 		if (err) throw err;
+				// 	})
 
-
+				// })
 
 			})
 
@@ -101,6 +136,19 @@ stream.on("tweet", function(tweet)
 				{
 					if (err) throw err;
 					console.log("added a new first line");
+
+					var newLine = new Line(
+					{
+						_id: tweet.id_str,
+						text: tweet.text,
+						poet: tweet.user.screen_name,
+						opening: tweet.id_str
+					})
+
+					newLine.save(function(err)
+					{
+						if (err) throw err;
+					})
 				})
 
 
@@ -175,5 +223,14 @@ router.get("/restful/poets/:screenname", function(req, res)
 	
 })
 
+
+router.get("/restful/firstlines", function(req, res, next)
+{
+	FirstLine.find({}).populate("lines").exec(function(err, docs)
+	{
+		if (err) throw err;
+		res.json(docs);
+	})
+})
 
 module.exports = router;
