@@ -30,6 +30,8 @@ app.controller("MainCtrl", function($scope)
 app.controller("PoetCtrl", function($scope, poets, post)
 {
 	$scope.screen_name = post.screen_name;
+	//alert(post.toSource());
+	$scope.lines = post.lines;
 	
 })
 

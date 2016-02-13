@@ -4,6 +4,7 @@ var router = express.Router();
 var mongoose = require("mongoose");
 
 var Poet = mongoose.model("Poet");
+var FirstLine = mongoose.model("FirstLine");
 
 var Twit = require("twit");
 
@@ -32,9 +33,10 @@ stream.on("tweet", function(tweet)
 {
 	//console.log(tweet);
 
+
 	Poet.find(
 	{
-		id_str: tweet.user.id_str
+		_id: tweet.user.id_str
 	}, function(err, docs)
 	{
 		//console.log(docs);
@@ -45,14 +47,31 @@ stream.on("tweet", function(tweet)
 			//do things like adding the tweet content to "lines"
 			Poet.findOneAndUpdate(
 			{
-				id_str: tweet.user.id_str
+				_id: tweet.user.id_str
 			},
 			{
 				$push: {lines: tweet.id_str}
 			}, function(err, docs)
 			{
 				if (err) throw err;
-				else console.log(docs);
+				
+				var newFirstLine = new FirstLine(
+				{
+					_id: tweet.id_str,
+					text: tweet.text,
+					poet: tweet.user.screen_name,
+					maxLength: 10
+				})
+				newFirstLine.save(function(err)
+				{
+					if (err) throw err;
+					console.log("added a new first line");
+				})
+
+
+
+
+
 			})
 
 		}
@@ -62,7 +81,7 @@ stream.on("tweet", function(tweet)
 			{
 				name: tweet.user.name,
 				id: tweet.user.id,
-				id_str: tweet.user.id_str,
+				_id: tweet.user.id_str,
 				screen_name: tweet.user.screen_name,
 				lines: tweet.id_str
 			});
@@ -70,11 +89,25 @@ stream.on("tweet", function(tweet)
 			{
 				if (err) throw err;
 				console.log("got a new user");
+
+				var newFirstLine = new FirstLine(
+				{
+					_id: tweet.id_str,
+					text: tweet.text,
+					poet: tweet.user.screen_name,
+					maxLength: 10
+				})
+				newFirstLine.save(function(err)
+				{
+					if (err) throw err;
+					console.log("added a new first line");
+				})
+
+
 			})
 		}
 	});
 
-	console.log("poet done finding does that work?");
 
 });
 
@@ -116,13 +149,13 @@ router.param("screenname", function(req, res, next, sname)
 {
 	var query = Poet.findOne({"screen_name" : sname});
 
-	query.select("name id_str screen_name lines");
+	query.select("name _id screen_name lines");
 
 	query.exec(function(err, poet)
 	{
 		if (err) return next(err);
 		if (!poet) return next(new Error("rip"));
-		console.log(poet);
+		//console.log(poet);
 		//req.name = pname;
 		req.poet = poet;
 		return next();
@@ -132,8 +165,14 @@ router.param("screenname", function(req, res, next, sname)
 
 router.get("/restful/poets/:screenname", function(req, res)
 {
-	console.log(req.poet);
-	res.json(req.poet);
+	
+
+	req.poet.populate("lines", function(err, docs)
+	{
+		res.json(req.poet);
+	})
+
+	
 })
 
 
