@@ -40,6 +40,7 @@ stream.on("tweet", function(tweet)
 	//console.log(tweet);
 
 
+
 	Poet.find(
 	{
 		_id: tweet.user.id_str
@@ -67,8 +68,9 @@ stream.on("tweet", function(tweet)
 
 					var howManyRands = docs.length + 1;
 					var rand = Math.floor(Math.random() * howManyRands);
-					if (rand == 0) //create a new poem
+					if (docs.length === 0 || rand === docs.length) //There are no poems, or new poem is rolled
 					{
+
 						var newPoem = new Poem(
 						{
 							_id: tweet.id_str,
@@ -95,30 +97,59 @@ stream.on("tweet", function(tweet)
 					}
 					else
 					{
-						Poem.findOneAndUpdate(
+						if (docs[rand].length === docs[rand].lines.length) //poem's max length has been reached
 						{
-							_id: docs[rand-1]._id
-						}, 
-						{
-							$push: {lines: tweet.id_str}
-						}, function(err, docs)
-						{
-							if (err) throw err;
-							console.log("added a line to existing poem");
-							
-							var newLine = new Line(
+							var newPoem = new Poem(
 							{
 								_id: tweet.id_str,
-								text: tweet.text,
-								poet: tweet.user.screen_name,
-								poem: docs._id
+								length: 10,
+								lines: [tweet.id_str]
 							})
-							newLine.save(function(err)
+							newPoem.save(function(err)
 							{
 								if (err) throw err;
-							})
+								console.log("new poem created because maximum lines reached");
 
-						})
+								var newLine = new Line(
+								{
+									_id: tweet.id_str,
+									text: tweet.text,
+									poet: tweet.user.screen_name,
+									poem: tweet.id_str
+								})
+								newLine.save(function(err)
+								{
+									if (err) throw err;
+								})
+							})
+						}
+						else
+						{
+							Poem.findOneAndUpdate(
+							{
+								_id: docs[rand]._id
+							}, 
+							{
+								$push: {lines: tweet.id_str}
+							}, function(err, docs)
+							{
+								if (err) throw err;
+								console.log("added a line to existing poem");
+								
+								var newLine = new Line(
+								{
+									_id: tweet.id_str,
+									text: tweet.text,
+									poet: tweet.user.screen_name,
+									poem: docs._id
+								})
+								newLine.save(function(err)
+								{
+									if (err) throw err;
+								})
+
+							})
+						}
 					}
 
 				})
@@ -129,6 +160,7 @@ stream.on("tweet", function(tweet)
 		}
 		else
 		{
+			console.log("new poet");
 			var newPoet = new Poet(
 			{
 				name: tweet.user.name,
@@ -140,33 +172,99 @@ stream.on("tweet", function(tweet)
 			newPoet.save(function(err)
 			{
 				if (err) throw err;
-				console.log("got a new user");
 
-				var newFirstLine = new FirstLine(
-				{
-					_id: tweet.id_str,
-					text: tweet.text,
-					poet: tweet.user.screen_name,
-					maxLength: 10
-				})
-				newFirstLine.save(function(err)
+				Poem.find(function(err, docs)
 				{
 					if (err) throw err;
-					console.log("added a new first line");
 
-					var newLine = new Line(
+					var howManyRands = docs.length + 1;
+					var rand = Math.floor(Math.random() * howManyRands);
+					if (docs.length === 0 || rand === docs.length) //There are no poems, or new poem is rolled
 					{
-						_id: tweet.id_str,
-						text: tweet.text,
-						poet: tweet.user.screen_name,
-						opening: tweet.id_str
-					})
 
-					newLine.save(function(err)
+						var newPoem = new Poem(
+						{
+							_id: tweet.id_str,
+							length: 10,
+							lines: [tweet.id_str]
+						})
+						newPoem.save(function(err)
+						{
+							if (err) throw err;
+							console.log("new poem created");
+
+							var newLine = new Line(
+							{
+								_id: tweet.id_str,
+								text: tweet.text,
+								poet: tweet.user.screen_name,
+								poem: tweet.id_str
+							})
+							newLine.save(function(err)
+							{
+								if (err) throw err;
+							})
+						})
+					}
+					else
 					{
-						if (err) throw err;
-					})
+						if (docs[rand].length === docs[rand].lines.length) //poem's max length has been reached
+						{
+							var newPoem = new Poem(
+							{
+								_id: tweet.id_str,
+								length: 10,
+								lines: [tweet.id_str]
+							})
+							newPoem.save(function(err)
+							{
+								if (err) throw err;
+								console.log("new poem created because maximum lines reached");
+
+								var newLine = new Line(
+								{
+									_id: tweet.id_str,
+									text: tweet.text,
+									poet: tweet.user.screen_name,
+									poem: tweet.id_str
+								})
+								newLine.save(function(err)
+								{
+									if (err) throw err;
+								})
+							})
+						}
+						else
+						{
+							Poem.findOneAndUpdate(
+							{
+								_id: docs[rand]._id
+							}, 
+							{
+								$push: {lines: tweet.id_str}
+							}, function(err, docs)
+							{
+								if (err) throw err;
+								console.log("added a line to existing poem");
+								
+								var newLine = new Line(
+								{
+									_id: tweet.id_str,
+									text: tweet.text,
+									poet: tweet.user.screen_name,
+									poem: docs._id
+								})
+								newLine.save(function(err)
+								{
+									if (err) throw err;
+								})
+
+							})
+						}
+					}
+
 				})
+
 
 
 			})
