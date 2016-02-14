@@ -19,10 +19,29 @@ app.factory("poets", function($http, $window)
 	return o;
 })
 
+app.factory("poems", function($http)
+{
+	var o =
+	{
+		poems: []
+	}
 
-app.controller("MainCtrl", function($scope)
+	o.getAll = function()
+	{
+		return $http.get("/restful/poems").success(function(data)
+		{
+			angular.copy(data, o.poems);
+		})
+	}
+
+	return o;
+})
+
+
+app.controller("MainCtrl", function($scope, poems)
 {
 	$scope.test = "pasta man";
+	$scope.poems = poems.poems;
 })
 
 
@@ -49,13 +68,13 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 		url: "/",
 		templateUrl: "/views/main.html",
 		controller: "MainCtrl as m",
-		// resolve:
-  //     	{
-  //       	postPromise: ["dex", function(dex)
-  //       	{
-  //         		return dex.getAll();
-  //       	}]
-  //     	}
+		resolve:
+      	{
+        	postPromise: ["poems", function(poems)
+        	{
+          		return poems.getAll();
+        	}]
+      	}
 	});
 
 	$stateProvider.state("poets",

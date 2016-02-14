@@ -4,7 +4,16 @@
 
 <h3>This is main.html </h3>
 
-<span ng-bind="test"></span>
+
+
+<div ng-repeat="poem in poems">
+The poem: 
+	<div ng-repeat="line in poem.lines">
+		<span ng-bind="line.text"></span>
+
+	</div>
+
+</div>
 
 
 </div>
