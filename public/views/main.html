@@ -7,12 +7,11 @@
 
 
 <div ng-repeat="poem in poems">
-The poem: 
-	<div ng-repeat="line in poem.lines">
-		<span ng-bind="line.text"></span>
-
+	<div class="poem">
+		<div ng-repeat="line in poem.lines">
+			<span ng-bind="line.text"></span>
+		</div>
 	</div>
-
 </div>
 
 

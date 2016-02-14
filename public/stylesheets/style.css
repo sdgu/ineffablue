@@ -1,8 +1,41 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body, html
+{
+  padding: 25px;
+  font: 14px "Ubuntu", Helvetica, Arial, sans-serif;
+  background: linear-gradient(#e6f5ff, #b3e0ff);
 }
 
-a {
+a 
+{
   color: #00B7FF;
+}
+
+#content
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+.pageWidth
+{
+	padding-right: 5px;
+	padding-left: 5px;
+	margin: 0px 1%;
+	box-sizing: border-box;
+}
+
+#pageContent
+{
+	background-color: #fcfcff;
+	padding: 10px 20px;
+	box-shadow: 0px 0px 7px #999;
+
+}
+
+.poem
+{
+	margin-top: 5px;
+	padding: 3px;
+	border: 1px solid;
+	border-radius: 5px;
 }

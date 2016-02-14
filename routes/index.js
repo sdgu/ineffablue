@@ -37,7 +37,7 @@ var T = new Twit(
 var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
 stream.on("tweet", function(tweet)
 {
-	console.log(tweet);
+	console.log(tweet); //maybe different check for rt
 
 	var tweetText = tweet.text;
 	tweetText = tweetText.replace("@ineffablue94 ", "");
