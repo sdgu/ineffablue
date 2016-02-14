@@ -61,11 +61,6 @@ stream.on("tweet", function(tweet)
 			{
 				if (err) throw err;
 
-
-
-
-			
-
 				Poem.find(function(err, docs)
 				{
 					if (err) throw err;
