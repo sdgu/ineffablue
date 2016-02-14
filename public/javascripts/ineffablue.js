@@ -54,15 +54,15 @@ app.controller("MainCtrl", function($scope, $rootScope, poems)
 
 		if ((20 < timeOfDay && timeOfDay < 23) || (0 < timeOfDay && timeOfDay < 6))
 		{
-			return {'background' : 'linear-gradient(#001f33, #003d66)'};
+			return {'background' : 'linear-gradient(#001f33, #003d66)', 'background-repeat' : 'no-repeat'};
 		}
 		else if ((6 < timeOfDay) && (timeOfDay < 17))
 		{
-			return {'background' : 'linear-gradient(#e6f5ff, #b3e0ff)'};
+			return {'background' : 'linear-gradient(#e6f5ff, #b3e0ff)', 'background-repeat' : 'no-repeat'};
 		}
 		else
 		{
-			return {'background' : 'linear-gradient(#972C00, #FF8402)'};
+			return {'background' : 'linear-gradient(#972C00, #FF8402)', 'background-repeat' : 'no-repeat'};
 		}
 		
 	}

@@ -1,8 +1,17 @@
-body, html
+html
 {
-  padding: 20px;
+  height: 100%;
+
+  
   font: 14px "Ubuntu", Helvetica, Arial, sans-serif;
   /*background: linear-gradient(#e6f5ff, #b3e0ff);*/
+}
+
+body
+{
+	min-height: 100%;
+	margin: 0;
+
 }
 
 a 
@@ -13,7 +22,7 @@ a
 #content
 {
 	margin: 0px;
-	padding: 0px;
+	padding: 40px;
 	
 
 }

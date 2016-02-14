@@ -9,7 +9,7 @@
 <div ng-repeat="poem in poems">
 	<div class="poem">
 		<div ng-repeat="line in poem.lines">
-			<span ng-bind="line.text"></span> by <span ng-bind="line.poet"></span>
+			<span ng-bind="line.text"></span> <!-- by <span ng-bind="line.poet"></span> -->
 		</div>
 	</div>
 </div>
