@@ -18,6 +18,7 @@ var db = connextion.connection;
 require("./models/poets");
 require("./models/firstlines");
 require("./models/lines");
+require("./models/poems")
 
 
 

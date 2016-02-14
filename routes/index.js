@@ -6,6 +6,8 @@ var mongoose = require("mongoose");
 var Poet = mongoose.model("Poet");
 var FirstLine = mongoose.model("FirstLine");
 var Line = mongoose.model("Line");
+var Poem = mongoose.model("Poem");
+
 var Twit = require("twit");
 
 
@@ -18,6 +20,10 @@ var Twit = require("twit");
 //   timeout_ms: 60*1000,
 // });
 
+function afterSave(err)
+{
+	if (err) throw err;
+}
 
 var T = new Twit(
 {
@@ -54,59 +60,75 @@ stream.on("tweet", function(tweet)
 			}, function(err, docs)
 			{
 				if (err) throw err;
-				FirstLine.find(function(err, docs)
-				{
-					FirstLine.findOneAndUpdate(
-					{
-						_id: docs[3]._id
-					},
-					{
-						$push: {lines: tweet.id_str}
-					}, function(err, docs)
-					{
-						if (err) throw err;
-						console.log(docs);
 
-						var newLine = new Line(
+
+
+
+			
+
+				Poem.find(function(err, docs)
+				{
+					if (err) throw err;
+
+					var howManyRands = docs.length + 1;
+					var rand = Math.floor(Math.random() * howManyRands);
+					if (rand == 0) //create a new poem
+					{
+						var newPoem = new Poem(
 						{
 							_id: tweet.id_str,
-							text: tweet.text,
-							poet: tweet.user.screen_name,
-							opening: tweet.id_str
+							length: 10,
+							lines: [tweet.id_str]
 						})
-						newLine.save(function(err)
+						newPoem.save(function(err)
 						{
 							if (err) throw err;
+							console.log("new poem created");
+
+							var newLine = new Line(
+							{
+								_id: tweet.id_str,
+								text: tweet.text,
+								poet: tweet.user.screen_name,
+								poem: tweet.id_str
+							})
+							newLine.save(function(err)
+							{
+								if (err) throw err;
+							})
 						})
-					})
+					}
+					else
+					{
+						Poem.findOneAndUpdate(
+						{
+							_id: docs[rand-1]._id
+						}, 
+						{
+							$push: {lines: tweet.id_str}
+						}, function(err, docs)
+						{
+							if (err) throw err;
+							console.log("added a line to existing poem");
+							
+							var newLine = new Line(
+							{
+								_id: tweet.id_str,
+								text: tweet.text,
+								poet: tweet.user.screen_name,
+								poem: docs._id
+							})
+							newLine.save(function(err)
+							{
+								if (err) throw err;
+							})
+
+						})
+					}
+
 				})
-				// var newFirstLine = new FirstLine(
-				// {
-				// 	_id: tweet.id_str,
-				// 	text: tweet.text,
-				// 	poet: tweet.user.screen_name,
-				// 	maxLength: 10
-				// })
-				// newFirstLine.save(function(err)
-				// {
-				// 	if (err) throw err;
-				// 	console.log("added a new first line");
 
-				// 	var newLine = new Line(
-				// 	{
-				// 		_id: tweet.id_str,
-				// 		text: tweet.text,
-				// 		poet: tweet.user.screen_name,
-				// 		opening: tweet.id_str
-				// 	})
-
-				// 	newLine.save(function(err)
-				// 	{
-				// 		if (err) throw err;
-				// 	})
-
-				// })
-
+				
 			})
 
 		}
@@ -214,7 +236,7 @@ router.param("screenname", function(req, res, next, sname)
 router.get("/restful/poets/:screenname", function(req, res)
 {
 	
-
+	//if id doesn't exist it's still ok
 	req.poet.populate("lines", function(err, docs)
 	{
 		res.json(req.poet);
@@ -227,6 +249,15 @@ router.get("/restful/poets/:screenname", function(req, res)
 router.get("/restful/firstlines", function(req, res, next)
 {
 	FirstLine.find({}).populate("lines").exec(function(err, docs)
+	{
+		if (err) throw err;
+		res.json(docs);
+	})
+})
+
+router.get("/restful/poems", function(req, res, next)
+{
+	Poem.find({}).populate("lines").exec(function(err, docs)
 	{
 		if (err) throw err;
 		res.json(docs);
