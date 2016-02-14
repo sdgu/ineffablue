@@ -6,7 +6,7 @@
 
 
 
-<div ng-repeat="poem in poems">
+<div ng-repeat="poem in poems | orderBy:'-latestDate'">
 	<div class="poem">
 		<div ng-repeat="line in poem.lines">
 			<span ng-bind="line.text"></span> <!-- by <span ng-bind="line.poet"></span> -->

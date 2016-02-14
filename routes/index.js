@@ -25,6 +25,49 @@ function afterSave(err)
 	if (err) throw err;
 }
 
+function dateParse(date)
+{
+
+  var year = "" + date.getUTCFullYear();
+  var month = date.getUTCMonth() + 1;
+  month = "" + month;
+  var day = date.getUTCDate();
+  var hour = date.getUTCHours();
+
+  day = day + "";
+
+  hour = ((hour - 5) % 24 + 24) % 24;
+
+  hour = "" + hour;
+  var minute = "" + date.getUTCMinutes();
+  var sec = "" + date.getUTCSeconds();
+
+  if (month.length === 1)
+  {
+    month = "0" + month;
+  }
+  if (day.length === 1)
+  {
+    day = "0" + day;
+  }
+  if (hour.length === 1)
+  {
+    hour = "0" + hour;
+  }
+  if (minute.length === 1)
+  {
+    minute = "0" + minute;
+  }
+  if (sec.length === 1)
+  {
+    sec = "0" + sec;
+  }
+
+  var fullDate = year + " " + month + " " + day + " " + hour + ":" + minute + ":" + sec;
+  //alert(fullDate);
+  return fullDate;
+}
+
 var T = new Twit(
 {
   consumer_key: process.env.CONSUMER_KEY,
@@ -38,6 +81,10 @@ var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
 stream.on("tweet", function(tweet)
 {
 	console.log(tweet); //maybe different check for rt
+
+
+	var tweetDate = dateParse(new Date());
+	
 
 	var tweetText = tweet.text;
 	tweetText = tweetText.replace("@ineffablue94 ", "");
@@ -83,7 +130,8 @@ stream.on("tweet", function(tweet)
 							{
 								_id: tweet.id_str,
 								length: 10,
-								lines: [tweet.id_str]
+								lines: [tweet.id_str],
+								latestDate: tweetDate
 							})
 							newPoem.save(function(err)
 							{
@@ -95,7 +143,8 @@ stream.on("tweet", function(tweet)
 									_id: tweet.id_str,
 									text: tweetText,
 									poet: tweet.user.screen_name,
-									poem: tweet.id_str
+									poem: tweet.id_str,
+									date: tweetDate
 								})
 								newLine.save(function(err)
 								{
@@ -111,7 +160,8 @@ stream.on("tweet", function(tweet)
 								{
 									_id: tweet.id_str,
 									length: 10,
-									lines: [tweet.id_str]
+									lines: [tweet.id_str],
+									latestDate: tweetDate
 								})
 								newPoem.save(function(err)
 								{
@@ -123,7 +173,8 @@ stream.on("tweet", function(tweet)
 										_id: tweet.id_str,
 										text: tweetText,
 										poet: tweet.user.screen_name,
-										poem: tweet.id_str
+										poem: tweet.id_str,
+										date: tweetDate
 									})
 									newLine.save(function(err)
 									{
@@ -138,7 +189,8 @@ stream.on("tweet", function(tweet)
 									_id: docs[rand]._id
 								}, 
 								{
-									$push: {lines: tweet.id_str}
+									$push: {lines: tweet.id_str},
+									latestDate: tweetDate
 								}, function(err, docs)
 								{
 									if (err) throw err;
@@ -149,7 +201,8 @@ stream.on("tweet", function(tweet)
 										_id: tweet.id_str,
 										text: tweetText,
 										poet: tweet.user.screen_name,
-										poem: docs._id
+										poem: docs._id,
+										date: tweetDate
 									})
 									newLine.save(function(err)
 									{
@@ -284,6 +337,10 @@ stream.on("tweet", function(tweet)
 
 });
 
+stream.on("delete", function(data)
+{
+	console.log(data);
+})
 
 //populate: .populate('_creator')
 
