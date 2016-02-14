@@ -38,10 +38,35 @@ app.factory("poems", function($http)
 })
 
 
-app.controller("MainCtrl", function($scope, poems)
+
+
+app.controller("MainCtrl", function($scope, $rootScope, poems)
 {
+
+
 	$scope.test = "pasta man";
 	$scope.poems = poems.poems;
+
+	$rootScope.timeOfDayStyle = function()
+	{
+		var timeOfDay = new Date().getHours();
+		
+
+		if ((20 < timeOfDay && timeOfDay < 23) || (0 < timeOfDay && timeOfDay < 6))
+		{
+			return {'background' : 'linear-gradient(#001f33, #003d66)'};
+		}
+		else if ((6 < timeOfDay) && (timeOfDay < 17))
+		{
+			return {'background' : 'linear-gradient(#e6f5ff, #b3e0ff)'};
+		}
+		else
+		{
+			return {'background' : 'linear-gradient(#972C00, #FF8402)'};
+		}
+		
+	}
+
 })
 
 

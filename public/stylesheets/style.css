@@ -2,7 +2,7 @@ body, html
 {
   padding: 25px;
   font: 14px "Ubuntu", Helvetica, Arial, sans-serif;
-  background: linear-gradient(#e6f5ff, #b3e0ff);
+  /*background: linear-gradient(#e6f5ff, #b3e0ff);*/
 }
 
 a 
@@ -14,6 +14,8 @@ a
 {
 	margin: 0px;
 	padding: 0px;
+	
+
 }
 
 .pageWidth
