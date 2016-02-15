@@ -46,6 +46,12 @@ a
 {
 	margin-top: 5px;
 	padding: 10px 10px 10px 10px;
-	border: 1px solid #999;
+	border: 1px solid #bbb;
 	border-radius: 8px;
+	background: linear-gradient(#ccf5ff, #99ebff);
+}
+
+.loading-title
+{
+	padding: 30px;
 }

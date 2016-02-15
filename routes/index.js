@@ -89,6 +89,7 @@ stream.on("tweet", function(tweet)
 	var tweetText = tweet.text;
 	tweetText = tweetText.replace("@ineffablue94 ", "");
 	// some kind of hashtag that doesn't trigger this
+	// maybe edits?
 	if ((tweetText.indexOf("#ineffable") > -1) || (tweetText.indexOf("RT") > -1) || (tweet.in_reply_to_status_id_str !== null))
 	{
 		console.log("not doing any db stuff");

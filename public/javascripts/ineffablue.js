@@ -1,5 +1,28 @@
-var app = angular.module("ineffablue", ["ui.router"]);
+var app = angular.module("ineffablue", ["ui.router", "angular-spinkit"]);
 
+app.directive('stateLoadingIndicator', function($rootScope) {
+  return {
+    restrict: 'E',
+    template: "<div ng-show='isStateLoading' class='loading-indicator'>" +
+    "<div class='loading-indicator-body'>" +
+    "<h3 class='loading-title'>Loading...</h3>" +
+    "<div class='spinner'><cube-grid-spinner></cube-grid-spinner></div>" +
+    "</div>" +
+    "</div>",
+    replace: true,
+    link: function(scope, elem, attrs) {
+      scope.isStateLoading = false;
+
+      $rootScope.$on('$stateChangeStart', function() {
+
+        scope.isStateLoading = true;
+      });
+      $rootScope.$on('$stateChangeSuccess', function() {
+        scope.isStateLoading = false;
+      });
+    }
+  };
+});
 
 app.factory("poets", function($http, $window)
 {
@@ -37,21 +60,14 @@ app.factory("poems", function($http)
 	return o;
 })
 
-
-
-
-app.controller("MainCtrl", function($scope, $rootScope, poems)
+app.factory("timeOfDay", function()
 {
+	var style = {};
 
-
-	$scope.test = "pasta man";
-	$scope.poems = poems.poems;
-
-	$rootScope.timeOfDayStyle = function()
+	style.todStyle = function()
 	{
 		var timeOfDay = new Date().getHours();
 		
-
 		if ((20 < timeOfDay && timeOfDay < 23) || (0 < timeOfDay && timeOfDay < 6))
 		{
 			return {'background' : 'linear-gradient(#001f33, #003d66)', 'background-repeat' : 'no-repeat'};
@@ -62,20 +78,40 @@ app.controller("MainCtrl", function($scope, $rootScope, poems)
 		}
 		else
 		{
-			return {'background' : 'linear-gradient(#972C00, #FF8402)', 'background-repeat' : 'no-repeat'};
+			return {'background' : 'linear-gradient(#e67300, #ffbd80)', 'background-repeat' : 'no-repeat'};
 		}
-		
+	}
+
+	return style;
+})
+
+
+app.controller("MainCtrl", function($scope, $rootScope, poems, timeOfDay)
+{
+
+
+	$scope.test = "pasta man";
+	$scope.poems = poems.poems;
+
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
 	}
 
 })
 
 
 
-app.controller("PoetCtrl", function($scope, poets, post)
+app.controller("PoetCtrl", function($scope, $rootScope, poets, post, timeOfDay)
 {
 	$scope.screen_name = post.screen_name;
 	//alert(post.toSource());
 	$scope.lines = post.lines;
+
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
+	}
 	
 })
 
