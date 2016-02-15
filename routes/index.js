@@ -75,6 +75,8 @@ var T = new Twit(
   timeout_ms: 60*1000,
 })
 
+var pronouns = ["I", "me", "we", "us", "you", "she", "her", "he", "him", "it", "they", "them", "my", "your", "his", "hers", "its", "our", "their", "mine", "yours", "ours", "theirs"];
+
 var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
 stream.on("tweet", function(tweet)
 {
@@ -88,8 +90,10 @@ stream.on("tweet", function(tweet)
 
 	var tweetText = tweet.text;
 	tweetText = tweetText.replace("@ineffablue94 ", "");
+	var arrTweetText = tweetText.split(" ");
 	// some kind of hashtag that doesn't trigger this
 	// maybe edits?
+	//maybe determine title through some voting system
 	if ((tweetText.indexOf("#ineffable") > -1) || (tweetText.indexOf("RT") > -1) || (tweet.in_reply_to_status_id_str !== null))
 	{
 		console.log("not doing any db stuff");
@@ -185,32 +189,115 @@ stream.on("tweet", function(tweet)
 							}
 							else
 							{
-								Poem.findOneAndUpdate(
+								if (arrTweetText.indexOf("I") > -1 || arrTweetText.indexOf("I\'") > -1)
 								{
-									_id: docs[rand]._id
-								}, 
-								{
-									$push: {lines: tweet.id_str},
-									latestDate: tweetDate
-								}, function(err, docs)
-								{
-									if (err) throw err;
-									console.log("added a line to existing poem");
-									
-									var newLine = new Line(
+									var potentialPoems = [];
+									Poem.find({}).populate("lines").exec(function(err, docs)
 									{
-										_id: tweet.id_str,
-										text: tweetText,
-										poet: tweet.user.screen_name,
-										poem: docs._id,
-										date: tweetDate
+										for (var i = 0; i < docs.length; i++)
+										{
+											var lineOfInterest = docs[i].lines[docs[i].lines.length-1].text.split(" ");
+											if (lineOfInterest.indexOf("I") > -1 || lineOfInterest.indexOf("I\'") > -1)
+											{
+												potentialPoems.push(docs[i]);
+											}
+										}
+										console.log(potentialPoems);
+										console.log("The line contained I or I contraction");
+
+										var hOrT = Math.floor(Math.random() * 4);
+										var randInPP = Math.floor(Math.random() * potentialPoems.length)
+										var poemID = potentialPoems[randInPP]._id;
+										if (0 <= hOrT && hOrT <= 2)
+										{
+											Poem.findOneAndUpdate(
+											{
+												_id: potentialPoems[randInPP]._id
+											},
+											{
+												$push: {lines: tweet.id_str},
+												latestDate: tweetDate
+											}, function(err, docs)
+											{
+												if (err) throw err;
+												console.log("added to a line with I");
+												console.log(poemID);
+
+												var newLine = new Line(
+												{
+													_id: tweet.id_str,
+													text: tweetText,
+													poet: tweet.user.screen_name,
+													poem: poemID,
+													date: tweetDate
+												})
+												newLine.save(function(err)
+												{
+													if (err) throw err;
+												})
+											})
+										}
+										else
+										{
+											Poem.findOneAndUpdate(
+											{
+												_id: docs[rand]._id
+											}, 
+											{
+												$push: {lines: tweet.id_str},
+												latestDate: tweetDate
+											}, function(err, docs)
+											{
+												if (err) throw err;
+												console.log("added a line to a random poem");
+												
+												var newLine = new Line(
+												{
+													_id: tweet.id_str,
+													text: tweetText,
+													poet: tweet.user.screen_name,
+													poem: docs._id,
+													date: tweetDate
+												})
+												newLine.save(function(err)
+												{
+													if (err) throw err;
+												})
+
+											})
+										}
+
 									})
-									newLine.save(function(err)
+								}
+								else
+								{
+									Poem.findOneAndUpdate(
+									{
+										_id: docs[rand]._id
+									}, 
+									{
+										$push: {lines: tweet.id_str},
+										latestDate: tweetDate
+									}, function(err, docs)
 									{
 										if (err) throw err;
-									})
+										console.log("added a line to existing poem");
+										
+										var newLine = new Line(
+										{
+											_id: tweet.id_str,
+											text: tweetText,
+											poet: tweet.user.screen_name,
+											poem: docs._id,
+											date: tweetDate
+										})
+										newLine.save(function(err)
+										{
+											if (err) throw err;
+										})
 
-								})
+									})
+								}
 							}
 						}
 

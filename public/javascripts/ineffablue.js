@@ -89,15 +89,15 @@ app.factory("timeOfDay", function()
 		
 		if ((20 < timeOfDay && timeOfDay <= 23) || (0 < timeOfDay && timeOfDay < 6))
 		{
-			return {'background' : 'linear-gradient(#001f33, #003d66)', 'background-repeat' : 'no-repeat'};
+			return {'background' : 'linear-gradient(#001f33, #003d66, #001f33)'}//, 'background-repeat' : 'no-repeat'};
 		}
 		else if ((6 <= timeOfDay) && (timeOfDay < 17))
 		{
-			return {'background' : 'linear-gradient(#e6f5ff, #b3e0ff)', 'background-repeat' : 'no-repeat'};
+			return {'background' : 'linear-gradient(#e6f5ff, #b3e0ff, #e6f5ff)'}//, 'background-repeat' : 'no-repeat'};
 		}
 		else
 		{
-			return {'background' : 'linear-gradient(#e67300, #ffbd80)', 'background-repeat' : 'no-repeat'};
+			return {'background' : 'linear-gradient(#e67300, #ffbd80, #e67300)'}//, 'background-repeat' : 'no-repeat'};
 		}
 	}
 
@@ -147,6 +147,8 @@ app.controller("PoetCtrl", function($scope, $rootScope, poets, post, timeOfDay)
 app.controller("PoemCtrl", function($scope, $rootScope, poems, post, timeOfDay)
 {
 	$scope.poem = post;
+
+	$scope.showAuthor = false;
 
 	$rootScope.timeOfDayStyle = function()
 	{

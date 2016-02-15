@@ -1,15 +1,18 @@
 <div>
 
+	<div class="showPoetsButton"><button ng-click="showPoets = !showPoets">Toggle Poets</button></div>
 	<div ng-repeat="line in poem.lines">
 
-		<span ng-bind="line.text"></span>
+		<span ng-bind="line.text"></span> 
+		<a href="/#/poets/{{line.poet}}">
+			<span ng-show="showPoets">
+				<span ng-bind="line.poet">
+				</span>
+			</span>
+		</a>
 
 	</div>
 
-	Poets: 
-	<span ng-repeat="line in poem.lines track by $index">
-		<span ng-bind="line.poet"></span><span ng-hide="($index === poem.lines.length - 1)">,</span>
-	</span>
 
 
 

@@ -7,7 +7,8 @@ var PoemSchema = new mongoose.Schema(
 	length: Number,
 	lines: [{type: mongoose.Schema.Types.String, ref: "Line"}],
 	tags: [String],
-	latestDate: String
+	latestDate: String,
+	contributors: [{type: mongoose.Schema.Types.String, ref: "Poet"}]
 });
 
 mongoose.model("Poem", PoemSchema);
