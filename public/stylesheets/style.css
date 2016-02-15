@@ -93,9 +93,9 @@ table td:hover
 {
 	margin-top: 5px;
 	padding: 10px 10px 10px 10px;
-	border-top: 1px solid #bbb;
+	border-top: 1px dotted #bbb;
 	/*border-radius: 8px;*/
-	background: linear-gradient(#e6faff, #b3f0ff);
+	/*background: linear-gradient(#e6faff, #b3f0ff);*/
 }
 
 .poemHeader

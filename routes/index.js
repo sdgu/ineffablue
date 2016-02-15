@@ -81,6 +81,8 @@ stream.on("tweet", function(tweet)
 	console.log(tweet); //maybe different check for rt
 
 
+	var howManyLines = 10 + Math.floor(Math.random() * 16);
+
 	var tweetDate = dateParse(new Date());
 	
 
@@ -128,7 +130,7 @@ stream.on("tweet", function(tweet)
 							var newPoem = new Poem(
 							{
 								_id: tweet.id_str,
-								length: 10,
+								length: howManyLines,
 								lines: [tweet.id_str],
 								latestDate: tweetDate
 							})
@@ -158,7 +160,7 @@ stream.on("tweet", function(tweet)
 								var newPoem = new Poem(
 								{
 									_id: tweet.id_str,
-									length: 10,
+									length: howManyLines,
 									lines: [tweet.id_str],
 									latestDate: tweetDate
 								})
@@ -246,7 +248,7 @@ stream.on("tweet", function(tweet)
 							var newPoem = new Poem(
 							{
 								_id: tweet.id_str,
-								length: 10,
+								length: howManyLines,
 								lines: [tweet.id_str]
 							})
 							newPoem.save(function(err)
@@ -274,7 +276,7 @@ stream.on("tweet", function(tweet)
 								var newPoem = new Poem(
 								{
 									_id: tweet.id_str,
-									length: 10,
+									length: howManyLines,
 									lines: [tweet.id_str]
 								})
 								newPoem.save(function(err)
