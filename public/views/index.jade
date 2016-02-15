@@ -6,10 +6,11 @@ html(ng-app="ineffablue")
 	body(ng-style="timeOfDayStyle()")
 
 
-		state-loading-indicator
+		
 
-		div#content(ng-hide="isStateLoading")
-			div.pageWidth
+		div#content
+			state-loading-indicator
+			div.pageWidth(ng-hide="isStateLoading")
 				div#pageContent
 					a(href="/") Home
 					br

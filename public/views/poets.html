@@ -2,7 +2,7 @@
 
 <span ng-bind="screen_name"></span>
 
-<div ng-repeat="line in lines">
+<div ng-repeat="line in lines | orderBy:'poem'">
 	<span ng-bind="line.text"></span>
 	<a href="/#/poems/{{line.poem}}">Go To Poem</a>
 

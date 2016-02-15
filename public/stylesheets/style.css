@@ -22,7 +22,8 @@ a
 #content
 {
 	margin: 0px;
-	padding: 40px;
+	padding: 0px 20px 0px 20px;
+
 	
 
 }
@@ -32,6 +33,7 @@ a
 
 	margin: 0px 0%;
 	box-sizing: border-box;
+
 }
 
 #pageContent
@@ -46,9 +48,9 @@ a
 {
 	margin-top: 5px;
 	padding: 10px 10px 10px 10px;
-	border: 1px solid #bbb;
-	border-radius: 8px;
-	background: linear-gradient(#ccf5ff, #99ebff);
+	border-top: 1px solid #bbb;
+	/*border-radius: 8px;*/
+	background: linear-gradient(#e6faff, #b3f0ff);
 }
 
 .poemFooter
