@@ -8,13 +8,17 @@ html(ng-app="ineffablue")
 
 		
 
+
+
 		div#content
 			state-loading-indicator
 			div.pageWidth(ng-hide="isStateLoading")
+				div#header
+						a(href="/") Home
+						br
+						a(href="/#/poets/aGoLemonade") Best User
 				div#pageContent
-					a(href="/") Home
-					br
-					a(href="/#/poets/aGoLemonade") Best User
+
 					
 					div(ui-view)
 

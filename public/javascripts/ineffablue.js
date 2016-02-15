@@ -76,12 +76,14 @@ app.factory("timeOfDay", function()
 	style.todStyle = function()
 	{
 		var timeOfDay = new Date().getHours();
+
+
 		
-		if ((20 < timeOfDay && timeOfDay < 23) || (0 < timeOfDay && timeOfDay < 6))
+		if ((20 < timeOfDay && timeOfDay <= 23) || (0 < timeOfDay && timeOfDay < 6))
 		{
 			return {'background' : 'linear-gradient(#001f33, #003d66)', 'background-repeat' : 'no-repeat'};
 		}
-		else if ((6 < timeOfDay) && (timeOfDay < 17))
+		else if ((6 <= timeOfDay) && (timeOfDay < 17))
 		{
 			return {'background' : 'linear-gradient(#e6f5ff, #b3e0ff)', 'background-repeat' : 'no-repeat'};
 		}
