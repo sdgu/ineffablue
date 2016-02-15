@@ -1,0 +1,25 @@
+<div>
+
+	<div ng-repeat="line in poem.lines">
+
+		<span ng-bind="line.text"></span>
+
+	</div>
+
+	Poets: 
+	<span ng-repeat="line in poem.lines track by $index">
+		<span ng-bind="line.poet"></span><span ng-hide="($index === poem.lines.length - 1)">,</span>
+	</span>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>

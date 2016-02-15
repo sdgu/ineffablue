@@ -51,6 +51,11 @@ a
 	background: linear-gradient(#ccf5ff, #99ebff);
 }
 
+.poemFooter
+{
+	text-align: right;
+}
+
 .loading-title
 {
 	padding: 30px;

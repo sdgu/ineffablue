@@ -425,4 +425,28 @@ router.get("/restful/poems", function(req, res, next)
 	})
 })
 
+router.param("poem", function(req, res, next, poemID)
+{
+	console.log(poemID);
+	var query = Poem.findById(poemID);
+
+	query.select("_id title lines tags");
+
+	query.exec(function(err, poem)
+	{
+		if (err) return next(err);
+		if(!poem) return next(new Error("rip"));
+		req.poem = poem;
+		return next();
+	})
+})
+
+router.get("/restful/poems/:poem", function(req, res, next)
+{
+	req.poem.populate("lines", function(err, docs)
+	{
+		res.json(req.poem);
+	})
+})
+
 module.exports = router;

@@ -49,6 +49,15 @@ app.factory("poems", function($http)
 		poems: []
 	}
 
+
+	o.getByID = function(id)
+	{
+		return $http.get("/restful/poems/" + id).then(function(res)
+		{
+			return res.data;
+		})
+	}
+
 	o.getAll = function()
 	{
 		return $http.get("/restful/poems").success(function(data)
@@ -116,7 +125,15 @@ app.controller("PoetCtrl", function($scope, $rootScope, poets, post, timeOfDay)
 })
 
 
+app.controller("PoemCtrl", function($scope, $rootScope, poems, post, timeOfDay)
+{
+	$scope.poem = post;
 
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
+	}
+})
 
 
 
@@ -147,8 +164,23 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 		{
 			post: ["$stateParams", "poets", function($stateParams, poets)
 			{
-				//alert($stateParams.name);
+				
 				return poets.get($stateParams.name);
+			}]
+		}
+	})
+
+	$stateProvider.state("poem",
+	{
+		url: "/poems/{id}",
+		templateUrl: "/views/poem.html",
+		controller: "PoemCtrl as p",
+		resolve:
+		{
+			post: ["$stateParams", "poems", function($stateParams, poems)
+			{
+				
+				return poems.getByID($stateParams.id);
 			}]
 		}
 	})
