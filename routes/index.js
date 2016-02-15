@@ -36,8 +36,6 @@ function dateParse(date)
 
   day = day + "";
 
-  hour = ((hour - 5) % 24 + 24) % 24;
-
   hour = "" + hour;
   var minute = "" + date.getUTCMinutes();
   var sec = "" + date.getUTCSeconds();

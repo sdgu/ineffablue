@@ -61,6 +61,12 @@ table td:hover
 	margin-bottom: 5px;
 }
 
+#header h3
+{
+	color: white;
+	margin: 0px 0px 5px 0px;
+}
+
 #content
 {
 	margin: 0px;
