@@ -1,18 +1,23 @@
 <div>
 
 
-
-<h3>This is main.html </h3>
-
-
-
 <div ng-repeat="poem in poems | orderBy:'-latestDate'">
 	<div class="poem">
+
+		<div class="poemHeader">
+			<a href="/#/poems/{{poem._id}}">Go To Poem</a>
+
+		</div>
+
 		<div ng-repeat="line in poem.lines">
 			<span ng-bind="line.text"></span> <!-- by <span ng-bind="line.poet"></span> -->
 		</div>
 
-		<div class="poemFooter"><a href="/#/poems/{{poem._id}}">Go To Poem</a></div>
+		<div class="poemFooter">
+			
+			<a twitter data-lang="en" data-count='horizontal' data-url='http://ineffa.blue/#/poems/{{poem._id}}' data-via='' data-size="medium" data-text='' ></a>
+			
+		</div>
 
 	</div>
 </div>

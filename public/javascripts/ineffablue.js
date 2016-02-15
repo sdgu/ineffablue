@@ -1,4 +1,4 @@
-var app = angular.module("ineffablue", ["ui.router", "angular-spinkit"]);
+var app = angular.module("ineffablue", ["ui.router", "angular-spinkit", "djds4rce.angular-socialshare"]);
 
 app.directive('stateLoadingIndicator', function($rootScope) {
   return {
@@ -36,6 +36,14 @@ app.factory("poets", function($http, $window)
 		return $http.get("/restful/poets/" + name).then(function(res)
 		{
 			return res.data;
+		})
+	}
+
+	o.getAll = function()
+	{
+		return $http.get("/restful/poets").success(function(data)
+		{
+			angular.copy(data, o.poets);
 		})
 	}
 
@@ -101,7 +109,8 @@ app.controller("MainCtrl", function($scope, $rootScope, poems, timeOfDay)
 {
 
 
-	$scope.test = "pasta man";
+	$scope.test = " ";
+	$scope.basePoemUrl = "http://ineffa.blue/#/poems/";
 	$scope.poems = poems.poems;
 
 	$rootScope.timeOfDayStyle = function()
@@ -111,7 +120,15 @@ app.controller("MainCtrl", function($scope, $rootScope, poems, timeOfDay)
 
 })
 
+app.controller("PoetsCtrl", function($scope, $rootScope, poets, timeOfDay)
+{
+	$scope.poets = poets.poets;
 
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
+	}
+})
 
 app.controller("PoetCtrl", function($scope, $rootScope, poets, post, timeOfDay)
 {
@@ -159,8 +176,22 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 
 	$stateProvider.state("poets",
 	{
-		url: "/poets/{name}",
+		url: "/poets",
 		templateUrl: "/views/poets.html",
+		controller: "PoetsCtrl as p",
+		resolve:
+		{
+			postPromise: ["poets", function(poets)
+			{
+				return poets.getAll();
+			}]
+		}
+	})
+
+	$stateProvider.state("poet",
+	{
+		url: "/poets/{name}",
+		templateUrl: "/views/poet.html",
 		controller: "PoetCtrl as p",
 		resolve:
 		{

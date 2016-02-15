@@ -6,7 +6,7 @@ html
 
 body
 {
-	/*min-height: 100%;*/
+	/*min-height: 100%;*/ /* removed so the loading screen doesn't scroll, may break something else */
 	margin: 0;
 
 }
@@ -16,26 +16,55 @@ a
   color: #00B7FF;
 }
 
+table td
+{
+	padding: 5px 10px 5px 10px;
+}
+
+table td:hover
+{
+	background: #00263F;
+
+
+}
+
 .loadingInd
 {
-	
+
+}
+
+#siteTitle
+{
+	position: relative;
+	background-color: #FCFCFF;
+
 }
 
 #header
 {
-	
-	background-color: #ddd;
+	top: 0;
+	position: relative;
+	background-color: #5F5F5F;
 	/*padding-left: 20px;*/
-	padding: 5px 0px 5px 20px;
+	padding: 5px 0px 10px 20px;
+}
+
+#header a
+{
+	color: #D8F7FF;
+	text-decoration: none;
+}
+
+#header h2
+{
+	color: white;
+	margin-bottom: 5px;
 }
 
 #content
 {
 	margin: 0px;
 	padding: 0px 20px 0px 20px;
-
-	
-
 }
 
 .pageWidth
@@ -63,12 +92,40 @@ a
 	background: linear-gradient(#e6faff, #b3f0ff);
 }
 
-.poemFooter
+.poemHeader
 {
 	text-align: right;
+}
+
+.poemFooter
+{
+
+	text-align: right;
+	/*width: 62px;*/
+	height: 21px;
+}
+
+.poemFooter a
+{
+	
+
+
+}
+
+
+
+.shiftUp
+{
+	margin-bottom: 10px;
 }
 
 .loading-title
 {
 	padding: 30px;
+}
+
+.loading-indicator
+{
+	background: #D7F7FF;
+	padding: 20px 0px 20px 0px;
 }

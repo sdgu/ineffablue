@@ -1,9 +1,10 @@
-<h3>poet profiles</h3>
+<div ng-repeat="poet in poets">
 
-<span ng-bind="screen_name"></span>
 
-<div ng-repeat="line in lines | orderBy:'poem'">
-	<span ng-bind="line.text"></span>
-	<a href="/#/poems/{{line.poem}}">Go To Poem</a>
+
+	<a href="/#/poets/{{poet.screen_name}}"><span ng-bind="poet.screen_name"></span></a>
+
+
+
 
 </div>
