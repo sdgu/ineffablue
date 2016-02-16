@@ -28,6 +28,11 @@ table td:hover
 
 }
 
+#titleBlue
+{
+	color: #D8F7FF;
+}
+
 .loadingInd
 {
 
@@ -52,7 +57,7 @@ table td:hover
 #header a
 {
 	color: #D8F7FF;
-	text-decoration: none;
+	/*text-decoration: none;*/
 }
 
 #header h2

@@ -87,7 +87,7 @@ app.factory("timeOfDay", function()
 
 
 		
-		if ((20 < timeOfDay && timeOfDay <= 23) || (0 < timeOfDay && timeOfDay < 6))
+		if ((20 < timeOfDay && timeOfDay <= 23) || (0 <= timeOfDay && timeOfDay < 6))
 		{
 			return {'background' : 'linear-gradient(#001f33, #003d66, #001f33)'}//, 'background-repeat' : 'no-repeat'};
 		}
