@@ -77,10 +77,17 @@ var T = new Twit(
 
 var pronouns = ["I", "me", "we", "us", "you", "she", "her", "he", "him", "it", "they", "them", "my", "your", "his", "hers", "its", "our", "their", "mine", "yours", "ours", "theirs"];
 
+var conjunctions = ["for", "and", "nor", "but", "or", "yet", "so"]; //possible add similar ie however etc
+
+function ArrRelatedToI(arr)
+{
+	return arr.indexOf("I") > -1 || arr.indexOf("I\'ll") > -1 || arr.indexOf("I\'m") > -1;
+}
+
 var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
 stream.on("tweet", function(tweet)
 {
-	console.log(tweet); //maybe different check for rt
+	//console.log(tweet); //maybe different check for rt
 
 
 	var howManyLines = 10 + Math.floor(Math.random() * 16);
@@ -91,6 +98,7 @@ stream.on("tweet", function(tweet)
 	var tweetText = tweet.text;
 	tweetText = tweetText.replace("@ineffablue94 ", "");
 	var arrTweetText = tweetText.split(" ");
+	console.log(arrTweetText);
 	// some kind of hashtag that doesn't trigger this
 	// maybe edits?
 	//maybe determine title through some voting system
@@ -127,8 +135,17 @@ stream.on("tweet", function(tweet)
 						if (err) throw err;
 
 						var howManyRands = docs.length + 1;
+
+						//if the first word isn't a conjunction, higher chance of new poem
+						if (conjunctions.indexOf(arrTweetText[0]) === -1)
+						{
+							howManyRands = Math.floor(howManyRands * 1.3);
+							console.log("first word isn't a conjunction");
+						}
+
+
 						var rand = Math.floor(Math.random() * howManyRands);
-						if (docs.length === 0 || rand === docs.length) //There are no poems, or new poem is rolled
+						if (docs.length === 0 || rand >= docs.length) //There are no poems, or new poem is rolled
 						{
 
 							var newPoem = new Poem(
@@ -189,7 +206,7 @@ stream.on("tweet", function(tweet)
 							}
 							else
 							{
-								if (arrTweetText.indexOf("I") > -1 || arrTweetText.indexOf("I\'") > -1)
+								if (ArrRelatedToI(arrTweetText))
 								{
 									var potentialPoems = [];
 									Poem.find({}).populate("lines").exec(function(err, docs)
@@ -197,18 +214,19 @@ stream.on("tweet", function(tweet)
 										for (var i = 0; i < docs.length; i++)
 										{
 											var lineOfInterest = docs[i].lines[docs[i].lines.length-1].text.split(" ");
-											if (lineOfInterest.indexOf("I") > -1 || lineOfInterest.indexOf("I\'") > -1)
+											if (ArrRelatedToI(lineOfInterest))
 											{
 												potentialPoems.push(docs[i]);
 											}
 										}
-										console.log(potentialPoems);
+										//console.log(potentialPoems);
 										console.log("The line contained I or I contraction");
 
 										var hOrT = Math.floor(Math.random() * 4);
 										var randInPP = Math.floor(Math.random() * potentialPoems.length)
 										var poemID = potentialPoems[randInPP]._id;
-										if (0 <= hOrT && hOrT <= 2)
+										console.log(hOrT);
+										if ((0 <= hOrT && hOrT <= 2) && potentialPoems.length > 0)
 										{
 											Poem.findOneAndUpdate(
 											{
@@ -221,7 +239,7 @@ stream.on("tweet", function(tweet)
 											{
 												if (err) throw err;
 												console.log("added to a line with I");
-												console.log(poemID);
+												//console.log(poemID);
 
 												var newLine = new Line(
 												{
