@@ -98,9 +98,8 @@ table td:hover
 {
 	margin-top: 5px;
 	padding: 10px 10px 10px 10px;
-	border-top: 1px dotted #bbb;
-	/*border-radius: 8px;*/
-	/*background: linear-gradient(#e6faff, #b3f0ff);*/
+	border-top: 1px dotted #B17849;
+
 }
 
 .poemHeader
@@ -137,7 +136,7 @@ table td:hover
 
 .loading-indicator
 {
-	background: #D7F7FF;
+	/*background: #D7F7FF;*/
 	padding: 20px 0px 20px 0px;
 }
 

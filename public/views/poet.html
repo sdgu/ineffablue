@@ -4,6 +4,7 @@
 
 <div ng-repeat="line in lines | orderBy:'poem'">
 	<span ng-bind="line.text"></span>
+	<span ng-bind="line._id"></span>
 	<a href="/#/poems/{{line.poem}}">Go To Poem</a>
 
 </div>

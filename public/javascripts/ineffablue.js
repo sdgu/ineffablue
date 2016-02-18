@@ -156,7 +156,13 @@ app.controller("PoemCtrl", function($scope, $rootScope, poems, post, timeOfDay)
 	}
 })
 
-
+app.controller("AboutCtrl", function($scope, $rootScope, timeOfDay)
+{
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
+	}
+})
 
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 {
@@ -218,6 +224,13 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 				return poems.getByID($stateParams.id);
 			}]
 		}
+	})
+
+	$stateProvider.state("about",
+	{
+		url: "/about",
+		templateUrl: "/views/about.html",
+		controller: "AboutCtrl"
 	})
 
 	// $locationProvider.html5Mode(true);

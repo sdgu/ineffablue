@@ -106,6 +106,7 @@ function createNewLineWithNewPoem(tweet, callback)
 		_id: tweet.id_str,
 		text: tweetText,
 		poet: tweet.user.screen_name,
+		poetID: tweet.user.id_str,
 		poem: tweet.id_str,
 		date: tweetDate
 	})
@@ -140,8 +141,44 @@ stream.on("tweet", function(tweet)
 		console.log("not doing any db stuff");
 	}
 
+	else if (arrTweetText[0] === "delete")
+	{
+		console.log("deleting...");
+		Line.findOne(
+		{
+			_id: arrTweetText[1]
+		}, function(err, docs)
+		{
+			if (err) throw err;
+			if (tweet.user.screen_name === docs.poet)
+			{
+				console.log("allowed to delete");
+				var poem_id = docs.poem;
+				console.log("poem id is " + poem_id);
+				docs.remove();
+
+				Poem.update({_id: poem_id}, {$pullAll: {_id: arrTweetText[1]}});
+				
+			}
+		})
+	}
+
 	else
 	{
+
+
+
+
+		// if (tweet.user.id_str === "2802785400")
+		// {
+		// 	console.log("creator tweeted");
+		// 	if (arrTweetText[1] === "delete")
+		// 	{
+		// 		console.log("deleting...");
+
+		// 	}
+		// }
+
 		Poet.find(
 		{
 			_id: tweet.user.id_str
@@ -218,6 +255,7 @@ stream.on("tweet", function(tweet)
 									{
 										for (var i = 0; i < docs.length; i++)
 										{
+											//console.log(docs[i].lines);
 											var lineOfInterest = docs[i].lines[docs[i].lines.length-1].text.split(" ");
 											if (ArrRelatedToI(lineOfInterest))
 											{
@@ -251,6 +289,7 @@ stream.on("tweet", function(tweet)
 													_id: tweet.id_str,
 													text: tweetText,
 													poet: tweet.user.screen_name,
+													poetID: tweet.user.id_str,
 													poem: poemID,
 													date: tweetDate
 												})
@@ -279,6 +318,7 @@ stream.on("tweet", function(tweet)
 													_id: tweet.id_str,
 													text: tweetText,
 													poet: tweet.user.screen_name,
+													poetID: tweet.user.id_str,
 													poem: docs._id,
 													date: tweetDate
 												})
@@ -311,6 +351,7 @@ stream.on("tweet", function(tweet)
 											_id: tweet.id_str,
 											text: tweetText,
 											poet: tweet.user.screen_name,
+											poetID: tweet.user.id_str,
 											poem: docs._id,
 											date: tweetDate
 										})
