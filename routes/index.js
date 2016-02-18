@@ -115,7 +115,8 @@ function createNewLineWithNewPoem(tweet, callback)
 
 function ArrRelatedToI(arr)
 {
-	return arr.indexOf("I") > -1 || arr.indexOf("I\'ll") > -1 || arr.indexOf("I\'m") > -1 || arr.indexOf("I\'d");
+	//console.log(arr.indexOf("I") + " " + arr.indexOf("I\'ll") + " " + arr.indexOf("I\'m") + " " + arr.indexOf("I\'d"));
+	return arr.indexOf("I") > -1 || arr.indexOf("I\'ll") > -1 || arr.indexOf("I\'m") > -1 || arr.indexOf("I\'d") > -1;
 }
 
 var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
@@ -250,6 +251,8 @@ stream.on("tweet", function(tweet)
 							{
 								if (ArrRelatedToI(arrTweetText))
 								{
+									console.log("The line contained I or I contraction");
+									console.log("it was " + arrTweetText);
 									var potentialPoems = [];
 									Poem.find({}).populate("lines").exec(function(err, docs)
 									{
@@ -263,7 +266,7 @@ stream.on("tweet", function(tweet)
 											}
 										}
 										//console.log(potentialPoems);
-										console.log("The line contained I or I contraction");
+										
 
 										var hOrT = Math.floor(Math.random() * 3);
 										var randInPP = Math.floor(Math.random() * potentialPoems.length)
