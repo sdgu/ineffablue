@@ -77,6 +77,24 @@ app.factory("poems", function($http)
 	return o;
 })
 
+app.factory("lines", function($http)
+{
+	var o = 
+	{
+		lines: []
+	}
+
+	o.getAll = function()
+	{
+		return $http.get("/restful/lines").success(function(data)
+		{
+			angular.copy(data, o.lines);
+		})
+	}
+
+	return o;
+})
+
 app.factory("timeOfDay", function()
 {
 	var style = {};
@@ -130,6 +148,16 @@ app.controller("PoetsCtrl", function($scope, $rootScope, poets, timeOfDay)
 	}
 })
 
+app.controller("LinesCtrl", function($scope, $rootScope, lines, timeOfDay)
+{
+	$scope.lines = lines.lines;
+
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
+	}
+})
+
 app.controller("PoetCtrl", function($scope, $rootScope, poets, post, timeOfDay)
 {
 	$scope.screen_name = post.screen_name;
@@ -164,6 +192,64 @@ app.controller("AboutCtrl", function($scope, $rootScope, timeOfDay)
 	}
 })
 
+app.controller("SearchCtrl", function($scope, $rootScope, timeOfDay, lines)
+{
+	
+
+	$rootScope.timeOfDayStyle = function()
+	{
+		return timeOfDay.todStyle();
+	}
+
+	var lineList = lines.lines;
+
+
+	// var options = 
+	// {
+	// 	keys: ["text"],
+	// 	threshold: 1.0,
+	// 	id: ""
+	// }
+	// var f = new Fuse(lineList, options);
+	// var result = f.search("cancelling for a snow day");
+
+
+	var currentInput = "";
+	$scope.findRelLines = function(e)
+	{
+
+		$scope.retList = [];
+		currentInput = e.target.id;
+		var q = $scope[currentInput];
+
+		var options = 
+		{
+			keys: ["text"],
+			threshold: 1.0,
+			id: ""
+		}
+		var f = new Fuse(lineList, options);
+		var result = f.search(q);
+
+		$scope.retList = result;
+
+
+		// for (var i = 0; i < lineList.length; i++)
+		// {
+		// 	if (lineList[i].text.contains(q) || lineList[i].text.toLowerCase().contains(q))
+		// 	{
+		// 		if (q.length >= 2)
+		// 		{
+		// 			$scope.retList.push(lineList[i])
+		// 		}
+		// 	}
+		// }
+		
+	}
+
+
+})
+
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 {
 	$urlRouterProvider.otherwise("/");
@@ -192,6 +278,20 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 			postPromise: ["poets", function(poets)
 			{
 				return poets.getAll();
+			}]
+		}
+	})
+
+	$stateProvider.state("lines",
+	{
+		url: "/lines",
+		templateUrl: "/views/lines.html",
+		controller: "LinesCtrl",
+		resolve:
+		{
+			postPromise: ["lines", function(lines)
+			{
+				return lines.getAll();
 			}]
 		}
 	})
@@ -231,6 +331,21 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 		url: "/about",
 		templateUrl: "/views/about.html",
 		controller: "AboutCtrl"
+	})
+
+	$stateProvider.state("search",
+	{
+		url: "/search",
+		templateUrl: "/views/search.html",
+		controller: "SearchCtrl as m",
+		resolve:
+		{
+			postPromise: ["lines", function(lines)
+			{
+				return lines.getAll();
+			}]
+		}
+
 	})
 
 	// $locationProvider.html5Mode(true);

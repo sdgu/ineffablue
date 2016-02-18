@@ -99,7 +99,15 @@ function createNewLineWithNewPoem(tweet, callback)
 {
 	var tweetDate = dateParse(new Date());
 	var tweetText = tweet.text;
-	tweetText = tweetText.replace("@ineffablue94 ", "");
+	if (tweetText.indexOf(".@ineffablue94") > -1)
+	{
+		tweetText = tweetText.replace(".@ineffablue94", "");
+	}
+	else
+	{
+		tweetText = tweetText.replace("@ineffablue94 ", "");
+	}
+	
 
 	var newLine = new Line(
 	{
@@ -131,7 +139,14 @@ stream.on("tweet", function(tweet)
 	
 
 	var tweetText = tweet.text;
-	tweetText = tweetText.replace("@ineffablue94 ", "");
+	if (tweetText.indexOf(".@ineffablue94") > -1)
+	{
+		tweetText = tweetText.replace(".@ineffablue94", "");
+	}
+	else
+	{
+		tweetText = tweetText.replace("@ineffablue94 ", "");
+	}
 	var arrTweetText = tweetText.split(" ");
 	console.log(arrTweetText);
 	// some kind of hashtag that doesn't trigger this
@@ -513,6 +528,15 @@ router.get("/restful/firstlines", function(req, res, next)
 router.get("/restful/poems", function(req, res, next)
 {
 	Poem.find({}).populate("lines").exec(function(err, docs)
+	{
+		if (err) throw err;
+		res.json(docs);
+	})
+})
+
+router.get("/restful/lines", function(req, res, next)
+{
+	Line.find({}, function(err, docs)
 	{
 		if (err) throw err;
 		res.json(docs);
