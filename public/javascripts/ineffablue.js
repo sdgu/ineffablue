@@ -1,4 +1,4 @@
-var app = angular.module("ineffablue", ["ui.router", "angular-spinkit", "djds4rce.angular-socialshare"]);
+var app = angular.module("ineffablue", ["ui.router", "angular-spinkit", "djds4rce.angular-socialshare", "ngSanitize"]);
 
 app.directive('stateLoadingIndicator', function($rootScope) {
   return {
@@ -217,33 +217,37 @@ app.controller("SearchCtrl", function($scope, $rootScope, timeOfDay, lines)
 	var currentInput = "";
 	$scope.findRelLines = function(e)
 	{
+		
 
 		$scope.retList = [];
 		currentInput = e.target.id;
 		var q = $scope[currentInput];
-
-		var options = 
-		{
-			keys: ["text"],
-			threshold: 1.0,
-			id: ""
-		}
-		var f = new Fuse(lineList, options);
-		var result = f.search(q);
-
-		$scope.retList = result;
-
-
-		// for (var i = 0; i < lineList.length; i++)
+		// $scope.q = q;
+		// var options = 
 		// {
-		// 	if (lineList[i].text.contains(q) || lineList[i].text.toLowerCase().contains(q))
-		// 	{
-		// 		if (q.length >= 2)
-		// 		{
-		// 			$scope.retList.push(lineList[i])
-		// 		}
-		// 	}
+		// 	keys: ["text"],
+		// 	threshold: 1.0,
+		// 	id: ""
 		// }
+		// var f = new Fuse(lineList, options);
+		// var result = f.search(q);
+
+
+		// $scope.retList = result;
+
+		
+
+
+		for (var i = 0; i < lineList.length; i++)
+		{
+			if (lineList[i].text.contains(q) || lineList[i].text.toLowerCase().contains(q))
+			{
+				if (q.length >= 2)
+				{
+					$scope.retList.push(lineList[i])
+				}
+			}
+		}
 		
 	}
 
