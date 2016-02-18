@@ -132,6 +132,8 @@ table td:hover
 .loading-title
 {
 	padding: 30px;
+	color: white;
+	background: black;
 }
 
 .loading-indicator
