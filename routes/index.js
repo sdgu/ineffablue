@@ -229,6 +229,19 @@ stream.on("tweet", function(tweet)
 
 						var howManyRands = docs.length + 1;
 
+
+
+
+
+
+
+
+
+
+
+						//create a different organizational scheme so multiple factors can be considered
+						//actually potentially fine
+
 						//if the first word isn't a conjunction, higher chance of new poem
 						if (conjunctionsAndOther.indexOf(arrTweetText[0]) === -1)
 						{
@@ -236,8 +249,9 @@ stream.on("tweet", function(tweet)
 							console.log("first word isn't a conjunction or other");
 						}
 
-
+						//depending on the roll of rand, we create a new poem or update and existing one
 						var rand = Math.floor(Math.random() * howManyRands);
+						console.log("rolled rand: " + rand);
 						if (docs.length === 0 || rand >= docs.length) //There are no poems, or new poem is rolled
 						{
 
@@ -272,19 +286,23 @@ stream.on("tweet", function(tweet)
 							else
 							{
 								//if the tweet contains "we"
+
+								//let theirs be more ok if the line contains ours
 								if (ArrRelatedToPlural(arrTweetText, "we"))
 								{
 									console.log("Line contained a variant of we");
 									var potentialPoems = [];
 									var useThesePoems = [];
+
 									Poem.find({}).populate("lines").exec(function(err, docs)
 									{
 										for (var i = 0; i < docs.length; i++)
 										{
 											var lineOfInterest = docs[i].lines[docs[i].lines.length-1].text.split(" ");
-											if (lineOfInterest.indexOf("their") > -1 || lineOfInterest.indexOf("theirs") > -1)
+											if ((ArrRelatedToPlural(lineOfInterest, "they") || lineOfInterest.indexOf("their") > -1 || lineOfInterest.indexOf("theirs") > -1) && (lineOfInterest.indexOf("ours") === -1 || lineOfInterest.indexOf("our") === -1))
 											{
-												console.log("the last line of the potential poem contains their or theirs");
+												console.log("the last line of the potential poem contains their or theirs but does not contain our or ours");
+												console.log(lineOfInterest);
 												potentialPoems.push(docs[i]);
 											}
 											else
@@ -296,17 +314,21 @@ stream.on("tweet", function(tweet)
 
 										var chanceOfSelecting = Math.floor(Math.random() * 6);
 										var randInPP = Math.floor(Math.random() * potentialPoems.length);
-										var poemID = potentialPoems[randInPP]._id;
+										//var poemID = potentialPoems[randInPP]._id;
 										var highChanceRand = Math.floor(Math.random() * useThesePoems.length);
-										var goodPoemID = useThesePoems[highChanceRand]._id;
+										//var goodPoemID = useThesePoems[highChanceRand]._id;
 										console.log(goodPoemID);
+
+
+
+
 										//high chance of not putting it in here
-										if ((0 <= chanceOfSelecting && chanceOfSelecting <= 4))
+										if ((0 <= chanceOfSelecting && chanceOfSelecting <= 4) && useThesePoems.length > 0)
 										{
 											console.log("the good rng");
 											Poem.findOneAndUpdate(
 											{
-												_id: goodPoemID
+												_id: useThesePoems[highChanceRand]._id
 											},
 											{
 												$push: {lines: tweet.id_str},
@@ -320,7 +342,35 @@ stream.on("tweet", function(tweet)
 													text: tweetText,
 													poet: tweet.user.screen_name,
 													poetID: tweet.user.id_str,
-													poem: goodPoemID,
+													poem: useThesePoems[highChanceRand]._id,
+													date: tweetDate
+												})
+												newLine.save(function(err)
+												{
+													if (err) throw err;
+												})
+											})
+										}
+										else if (potentialPoems.length > 0)
+										{
+											console.log("the bad rng");
+											Poem.findOneAndUpdate(
+											{
+												_id: potentialPoems[randInPP]._id
+											},
+											{
+												$push: {lines: tweet.id_str},
+												latestDate: tweetDate
+											}, function(err, docs)
+											{
+												if (err) throw err;
+												var newLine = new Line(
+												{
+													_id: tweet.id_str,
+													text: tweetText,
+													poet: tweet.user.screen_name,
+													poetID: tweet.user.id_str,
+													poem: potentialPoems[randInPP]._id,
 													date: tweetDate
 												})
 												newLine.save(function(err)
@@ -331,10 +381,80 @@ stream.on("tweet", function(tweet)
 										}
 										else
 										{
-											console.log("the bad rng");
 											Poem.findOneAndUpdate(
 											{
-												_id: poemID
+												_id: docs[rand]._id
+											}, 
+											{
+												$push: {lines: tweet.id_str},
+												latestDate: tweetDate
+											}, function(err, docs)
+											{
+												if (err) throw err;
+												console.log("added a line to existing poem");
+												
+												var newLine = new Line(
+												{
+													_id: tweet.id_str,
+													text: tweetText,
+													poet: tweet.user.screen_name,
+													poetID: tweet.user.id_str,
+													poem: docs._id,
+													date: tweetDate
+												})
+												newLine.save(function(err)
+												{
+													if (err) throw err;
+												})
+
+											})
+										}
+									})
+								}
+
+								else if ((ArrRelatedToPlural(arrTweetText, "they") || arrTweetText.indexOf("their") > -1 || arrTweetText.indexOf("theirs") > -1) && (arrTweetText.indexOf("ours") === -1 || arrTweetText.indexOf("our") === -1))
+								{
+									console.log("Line contained a variant of they but not our or ours");
+									var potentialPoems = [];
+									var useThesePoems = [];
+
+									Poem.find({}).populate("lines").exec(function(err, docs)
+									{
+										for (var i = 0; i < docs.length; i++)
+										{
+											var lineOfInterest = docs[i].lines[docs[i].lines.length-1].text.split(" ");
+											if (ArrRelatedToPlural(arrTweetText, "we"))
+											{
+												console.log("the last line of the potential poem contains we");
+												console.log(lineOfInterest);
+												potentialPoems.push(docs[i]);
+											}
+											else
+											{
+												console.log("we want these lines to be more likely")
+												useThesePoems.push(docs[i]);
+											}
+										}
+
+										var chanceOfSelecting = Math.floor(Math.random() * 6);
+										var randInPP = Math.floor(Math.random() * potentialPoems.length);
+										
+
+										//var poemID = potentialPoems[randInPP]._id;
+										var highChanceRand = Math.floor(Math.random() * useThesePoems.length);
+										//var goodPoemID = useThesePoems[highChanceRand]._id;
+										//console.log(goodPoemID);
+
+
+
+
+										//high chance of putting here
+										if ((0 <= chanceOfSelecting && chanceOfSelecting <= 4) && useThesePoems.length > 0)
+										{
+											console.log("the good rng");
+											Poem.findOneAndUpdate(
+											{
+												_id: useThesePoems[highChanceRand]._id
 											},
 											{
 												$push: {lines: tweet.id_str},
@@ -348,7 +468,7 @@ stream.on("tweet", function(tweet)
 													text: tweetText,
 													poet: tweet.user.screen_name,
 													poetID: tweet.user.id_str,
-													poem: poemID,
+													poem: useThesePoems[highChanceRand]._id,
 													date: tweetDate
 												})
 												newLine.save(function(err)
@@ -357,10 +477,68 @@ stream.on("tweet", function(tweet)
 												})
 											})
 										}
+										//make sure the arr actually has elements
+										else if (potentialPoems.length > 0)
+										{
+											console.log("the bad rng");
+											Poem.findOneAndUpdate(
+											{
+												_id: potentialPoems[randInPP]._id
+											},
+											{
+												$push: {lines: tweet.id_str},
+												latestDate: tweetDate
+											}, function(err, docs)
+											{
+												if (err) throw err;
+												var newLine = new Line(
+												{
+													_id: tweet.id_str,
+													text: tweetText,
+													poet: tweet.user.screen_name,
+													poetID: tweet.user.id_str,
+													poem: potentialPoems[randInPP]._id,
+													date: tweetDate
+												})
+												newLine.save(function(err)
+												{
+													if (err) throw err;
+												})
+											})
+										}
+										//catch all
+										else
+										{
+											Poem.findOneAndUpdate(
+											{
+												_id: docs[rand]._id
+											}, 
+											{
+												$push: {lines: tweet.id_str},
+												latestDate: tweetDate
+											}, function(err, docs)
+											{
+												if (err) throw err;
+												console.log("added a line to existing poem");
+												
+												var newLine = new Line(
+												{
+													_id: tweet.id_str,
+													text: tweetText,
+													poet: tweet.user.screen_name,
+													poetID: tweet.user.id_str,
+													poem: docs._id,
+													date: tweetDate
+												})
+												newLine.save(function(err)
+												{
+													if (err) throw err;
+												})
+
+											})
+										}
 									})
 								}
-
-
 								else if (ArrRelatedToI(arrTweetText))
 								{
 									console.log("The line contained I or I contraction");
@@ -405,7 +583,7 @@ stream.on("tweet", function(tweet)
 													text: tweetText,
 													poet: tweet.user.screen_name,
 													poetID: tweet.user.id_str,
-													poem: poemID,
+													poem: potentialPoems[randInPP]._id,
 													date: tweetDate
 												})
 												newLine.save(function(err)
