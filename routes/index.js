@@ -164,6 +164,8 @@ stream.on("tweet", function(tweet)
 		console.log("not doing any db stuff");
 	}
 
+
+	//add if only one line in the poem
 	else if (arrTweetText[0] === "delete")
 	{
 		console.log("deleting...");
@@ -173,7 +175,7 @@ stream.on("tweet", function(tweet)
 		}, function(err, docs)
 		{
 			if (err) throw err;
-			if (tweet.user.screen_name === docs.poet)
+			if (tweet.user.screen_name === docs.poet || tweet.user.screen_name === "aGoLemonade")
 			{
 				console.log("allowed to delete");
 				var poem_id = docs.poem;
@@ -317,7 +319,7 @@ stream.on("tweet", function(tweet)
 										//var poemID = potentialPoems[randInPP]._id;
 										var highChanceRand = Math.floor(Math.random() * useThesePoems.length);
 										//var goodPoemID = useThesePoems[highChanceRand]._id;
-										console.log(goodPoemID);
+										//console.log(goodPoemID);
 
 
 
@@ -560,7 +562,7 @@ stream.on("tweet", function(tweet)
 
 										var hOrT = Math.floor(Math.random() * 3);
 										var randInPP = Math.floor(Math.random() * potentialPoems.length)
-										var poemID = potentialPoems[randInPP]._id;
+										// var poemID = potentialPoems[randInPP]._id;
 										console.log(hOrT);
 										if ((0 <= hOrT && hOrT <= 1) && potentialPoems.length > 0)
 										{
