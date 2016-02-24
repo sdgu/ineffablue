@@ -762,16 +762,33 @@ router.get("/restful/poets", function(req, res, next)
 })
 
 
-router.param("screenname", function(req, res, next, sname)
+// router.param("screenname", function(req, res, next, sname)
+// {
+// 	var query = Poet.findOne({"screen_name" : sname});
+
+// 	query.select("name _id screen_name lines");
+
+// 	query.exec(function(err, poet)
+// 	{
+// 		if (err) return next(err);
+// 		if (!poet) return next(new Error("rip"));
+// 		//console.log(poet);
+// 		//req.name = pname;
+// 		req.poet = poet;
+// 		return next();
+// 	});
+// })
+
+router.param("userid", function(req, res, next, uid)
 {
-	var query = Poet.findOne({"screen_name" : sname});
+	var query = Poet.findOne({"_id" : uid});
 
 	query.select("name _id screen_name lines");
 
 	query.exec(function(err, poet)
 	{
 		if (err) return next(err);
-		if (!poet) return next(new Error("rip"));
+		if (!poet) return next(new Error("uid not working o.o"));
 		//console.log(poet);
 		//req.name = pname;
 		req.poet = poet;
@@ -780,7 +797,19 @@ router.param("screenname", function(req, res, next, sname)
 })
 
 
-router.get("/restful/poets/:screenname", function(req, res)
+// router.get("/restful/poets/:screenname", function(req, res)
+// {
+	
+// 	//if id doesn't exist it's still ok
+// 	req.poet.populate("lines", function(err, docs)
+// 	{
+// 		res.json(req.poet);
+// 	})
+
+	
+// })
+
+router.get("/restful/poets/:userid", function(req, res)
 {
 	
 	//if id doesn't exist it's still ok

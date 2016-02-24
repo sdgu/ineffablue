@@ -31,9 +31,9 @@ app.factory("poets", function($http, $window)
 		poets: []
 	}
 
-	o.get = function(name)
+	o.get = function(id)
 	{
-		return $http.get("/restful/poets/" + name).then(function(res)
+		return $http.get("/restful/poets/" + id).then(function(res)
 		{
 			return res.data;
 		})
@@ -302,7 +302,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 
 	$stateProvider.state("poet",
 	{
-		url: "/poets/{name}",
+		url: "/poets/{id}",
 		templateUrl: "/views/poet.html",
 		controller: "PoetCtrl as p",
 		resolve:
@@ -310,7 +310,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider)
 			post: ["$stateParams", "poets", function($stateParams, poets)
 			{
 				
-				return poets.get($stateParams.name);
+				return poets.get($stateParams.id);
 			}]
 		}
 	})
