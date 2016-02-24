@@ -138,7 +138,7 @@ var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
 stream.on("tweet", function(tweet)
 {
 	//console.log(tweet); //maybe different check for rt
-
+	console.log("got tweet");
 
 	var howManyLines = 10 + Math.floor(Math.random() * 16);
 
