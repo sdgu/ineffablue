@@ -11,8 +11,8 @@ require("./env.js")
 var dbuser = process.env.USER;
 var dbpass = process.env.PASS;
 
-// var dburi = "mongodb://" + dbuser + ":" + dbpass + "@ds061365.mongolab.com:61365/ineffablue";
-var dburi = "mongodb://127.0.0.1:27017/ineffablue";
+var dburi = "mongodb://" + dbuser + ":" + dbpass + "@ds061365.mongolab.com:61365/ineffablue";
+// var dburi = "mongodb://127.0.0.1:27017/ineffablue";
 var connextion = mongoose.connect(dburi);
 var db = connextion.connection;
 
