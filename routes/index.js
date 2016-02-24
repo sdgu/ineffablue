@@ -756,7 +756,7 @@ router.get("/restful/poets", function(req, res, next)
 	Poet.find(function(err, docs)
 	{
 		if (err) throw err;
-		console.log(docs);
+		//console.log(docs);
 		res.send(docs);
 	})
 })
