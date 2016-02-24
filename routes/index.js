@@ -836,6 +836,7 @@ router.get("/restful/poems", function(req, res, next)
 	Poem.find({}).populate("lines").exec(function(err, docs)
 	{
 		if (err) throw err;
+		console.log("test");
 		res.json(docs);
 	})
 })
