@@ -142,6 +142,17 @@ function ArrRelatedToPlural(arr, base) //can use we with this
 }
 
 var stream = T.stream("statuses/filter", {track: "@ineffablue94"});
+
+stream.on("connected", function(res)
+{
+	console.log("stream connected " + res.statusCode);
+})
+
+stream.on("reconnect", function(req, res, interval)
+{
+	console.log("stream reconnecting in " + interval + " " + res.statusCode);
+})
+
 stream.on("tweet", function(tweet)
 {
 	//console.log(tweet); //maybe different check for rt
