@@ -75,6 +75,13 @@ var T = new Twit(
   timeout_ms: 60*1000,
 })
 
+T.get('statuses/home_timeline', function (err, reply) {
+  if (err)
+    return console.log('err', err)
+
+  console.log('reply', reply)
+})
+
 var pronouns = ["I", "me", "we", "us", "you", "she", "her", "he", "him", "it", "they", "them", "my", "your", "his", "hers", "its", "our", "their", "mine", "yours", "ours", "theirs"];
 
 var conjunctionsAndOther = ["for", "and", "nor", "but", "or", "yet", "so", "therefore", "thus"]; //possible add similar ie however etc
