@@ -1,7 +1,30 @@
-<div ng-repeat="line in lines">
+<table>
 
-	<span ng-bind="line.text"></span>
-	<a href="/#/poets/{{line.poet}}"><span ng-bind="line.poet"></span></a>
-	<a href="/#/poems/{{line.poem}}">Go To Poem</a>
 
-</div>
+	<thead>
+		<td>
+			Line
+		</td>
+		<td>
+ 			Poet
+		</td>
+		<td>
+			Poem containing the line
+		</td>
+	</thead>
+
+	<tr ng-repeat="line in lines">
+		<td>
+			<span ng-bind="line.text"></span>
+		</td>
+		<td>
+			<a href="/#/poets/{{line.poet}}"><span ng-bind="line.poet"></span></a>
+		</td>
+		<td>
+			<a href="/#/poems/{{line.poem}}">Go To Poem</a>
+		</td>
+
+	</tr>
+
+</table>
+
