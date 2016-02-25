@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 
 var mongoose = require("mongoose");
-require("./env.js")
+// require("./env.js")
 var dbuser = process.env.USER;
 var dbpass = process.env.PASS;
 
