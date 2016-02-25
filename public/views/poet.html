@@ -1,10 +1,27 @@
-<h3>poet profiles</h3>
 
-<span ng-bind="screen_name"></span>
+<h3><span ng-bind="screen_name"></span></h3>
 
+<p>
+	You can also tweet <br />
+	@ineffablue94 delete [tweetID] <br />
+	to remove a line you wrote. See <a href="/about">About</a> for more.
+
+</p>
+
+<table>
 <div ng-repeat="line in lines | orderBy:'poem'">
-	<span ng-bind="line.text"></span>
-	<span ng-bind="line._id"></span>
-	<a href="/#/poems/{{line.poem}}">Go To Poem</a>
+	<tr>
+		<td>
+			<span ng-bind="line.text"></span>
+		</td>
+		<td>
+			<span ng-bind="line._id"></span>
+		</td>
+		<td>
+			<a href="/#/poems/{{line.poem}}">Go To Poem</a>
+		</td>
 
+	</tr>
+	
 </div>
+</table>
