@@ -24,9 +24,12 @@ table td
 table td:hover
 {
 	background: #00263F;
+	color: white;
 
 
 }
+
+
 
 #titleBlue
 {
