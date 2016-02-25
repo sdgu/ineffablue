@@ -9,8 +9,20 @@
 </p>
 
 <table>
-<div ng-repeat="line in lines | orderBy:'poem'">
-	<tr>
+<!-- <div ng-repeat="line in lines | orderBy:'poem'"> -->
+	<thead>
+		<td>
+			Line
+		</td>
+		<td>
+			Tweet ID
+		</td>
+		<td>
+			Poem containing the line
+		</td>
+	</thead>
+
+	<tr ng-repeat="line in lines | orderBy:'poem'">
 		<td>
 			<span ng-bind="line.text"></span>
 		</td>
@@ -23,5 +35,5 @@
 
 	</tr>
 	
-</div>
+<!-- </div> -->
 </table>
