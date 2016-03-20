@@ -50,11 +50,27 @@ table td:hover
 
 #header
 {
-	top: 0;
-	position: relative;
+	/*top: 0;*/
+	/*position: relative;*/
+	/*position: absolute;*/
 	background-color: #5F5F5F;
 	/*padding-left: 20px;*/
 	padding: 5px 0px 10px 20px;
+
+	float: left;
+	width: 250px;
+
+	margin-top: 200px;
+
+	border-radius: 5px;
+
+	box-shadow: 5px black;
+
+}
+
+#header img
+{
+	margin-right: 10px;
 }
 
 #header a
@@ -85,24 +101,30 @@ table td:hover
 {
 
 	margin: 0px 0%;
+	
 	box-sizing: border-box;
 
 }
 
 #pageContent
 {
-	background-color: #fcfcff;
+	/*background-color: #fcfcff;*/
 	padding: 10px 15px;
+	/*border-radius: 5px;*/
+	margin-left: 300px;
 	/*box-shadow: 0px 0px 7px #999;*/
 
 }
 
 .poem
 {
-	margin-top: 5px;
-	padding: 10px 10px 10px 10px;
+	background-color: #fcfcff;
+	margin-top: 15px;
+	padding: 10px 10px 10px 20px;
 
-	border-top: 1px dotted #EFA686;
+	border-radius: 5px;
+
+/*	border-top: 1px dotted #EFA686;*/
 
 }
 
